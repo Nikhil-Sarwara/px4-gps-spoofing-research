@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  px4-gps-spoofing:
+    build: ./docker
+    container_name: px4-gps-spoofing-dev
+    ports:
+      - "5760:5760"    # MAVLink TCP port
+      - "14550:14550"  # QGroundControl port
+      - "14540:14540"  # Offboard API
+      - "18570:18570"  # Simulator
+      - "8888:8888"    # Jupyter notebook
+    volumes:
+      - ./PX4-Autopilot:/workspace/PX4-Autopilot
+      - ./src:/workspace/src
+      - ./logs:/workspace/logs
+      - ./data:/workspace/data
+      - ./notebooks:/workspace/notebooks
+      - ./requirements:/workspace/requirements
+    environment:
+      - PX4_HOME_LAT=42.3898
+      - PX4_HOME_LON=-71.1476
+      - PX4_HOME_ALT=14.2
+      - DISPLAY=${DISPLAY}
+    network_mode: host
+    working_dir: /workspace
+    command: jupyter
+    stdin_open: true
+    tty: true
+
+  # Optional: QGroundControl service for GUI access
+  qgroundcontrol:
+    image: qgroundcontrol/qgroundcontrol:latest
+    container_name: qgc-gps-research
+    network_mode: host
+    environment:
+      - DISPLAY=${DISPLAY}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    profiles: ["with-gui"]
+

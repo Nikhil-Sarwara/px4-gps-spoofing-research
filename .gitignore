@@ -61,3 +61,4 @@ PX4-Autopilot/Tools/sitl_gazebo/build/
 # OS specific
 .DS_Store
 Thumbs.db
+PX4-Autopilot/
