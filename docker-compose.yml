@@ -5,21 +5,25 @@ services:
     build: ./docker
     container_name: px4-gps-spoofing
     ports:
-      - "5760:5760"    # MAVLink TCP port
-      - "14550:14550"  # QGroundControl port
-      - "14540:14540"  # Offboard API
-      - "18570:18570"  # Simulator
+      - "5760:5760"
+      - "14550:14550"
+      - "14540:14540"
+      - "18570:18570"
     volumes:
       - ./PX4-Autopilot:/workspace/PX4-Autopilot
       - ./src:/workspace/src
       - ./logs:/workspace/logs
       - ./data:/workspace/data
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /mnt/wslg:/mnt/wslg:rw
     environment:
       - PX4_HOME_LAT=42.3898
       - PX4_HOME_LON=-71.1476
       - PX4_HOME_ALT=14.2
-      - DISPLAY=${DISPLAY}
-    network_mode: host
+      - DISPLAY=:0
+      - WAYLAND_DISPLAY=$WAYLAND_DISPLAY
+      - XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR
+      - PULSE_RUNTIME_PATH=$XDG_RUNTIME_DIR/pulse
     working_dir: /workspace
     command: sitl
     stdin_open: true
